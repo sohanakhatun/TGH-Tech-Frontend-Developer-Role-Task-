@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   addBookmarkAction,
-  removeBookmarkAction,
 } from "./redux/BookmarkActions";
 import Spinner from "./Spinner";
 const Home = ({ addBookmarkAction }) => {
@@ -25,7 +24,6 @@ const Home = ({ addBookmarkAction }) => {
         throw new Error("Failed to fetch quote");
       }
       const data = await response.json();
-
       setQuote(data.content);
       setAuthor(data.author);
       setId(data._id);
@@ -159,6 +157,5 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   addBookmarkAction,
-  removeBookmarkAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -5,9 +5,4 @@ export const addBookmarkAction = (bookmarkData) => {
   };
 };
 
-export const removeBookmarkAction = (bookmarkId) => {
-  return {
-    type: "REMOVE_BOOKMARK",
-    payload: bookmarkId,
-  };
-};
+
