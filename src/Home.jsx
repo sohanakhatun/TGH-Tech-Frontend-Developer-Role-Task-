@@ -15,6 +15,32 @@ const Home = ({ addBookmarkAction }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    
+    const handleClick = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("https://api.quotable.io/random");
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch quote");
+        }
+        const data = await response.json();
+        setQuote(data.content);
+        setAuthor(data.author);
+        setId(data._id);
+      } catch (error) {
+        toast.error(
+          "Something went wrong in generating Quote,Please try again later!"
+        );
+      }
+      setLoading(false);
+    };
+    handleClick()
+   
+  }, [])
+  
+
   const handleClick = async () => {
     setLoading(true);
     try {
@@ -34,7 +60,6 @@ const Home = ({ addBookmarkAction }) => {
     }
     setLoading(false);
   };
-
   const handleQueryClick = async () => {
     setLoading(true);
     try {
