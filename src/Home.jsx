@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import {
-  addBookmarkAction,
-} from "./redux/BookmarkActions";
+import { addBookmarkAction } from "./redux/BookmarkActions";
 import Spinner from "./Spinner";
 const Home = ({ addBookmarkAction }) => {
   const [quote, setQuote] = useState("");
@@ -15,13 +13,13 @@ const Home = ({ addBookmarkAction }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // FETCHING QUOTES ON FIRST RENDER
   useEffect(() => {
-    
-    const handleClick = async () => {
+    const fetchQuotes = async () => {
       setLoading(true);
       try {
         const response = await fetch("https://api.quotable.io/random");
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch quote");
         }
@@ -36,11 +34,27 @@ const Home = ({ addBookmarkAction }) => {
       }
       setLoading(false);
     };
-    handleClick()
-   
-  }, [])
-  
+    fetchQuotes();
+  }, []);
 
+  // FETCHING TAGS ON FIRST RENDER
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch("https://api.quotable.io/tags");
+        if (!response.ok) {
+          throw new Error("Failed to fetch quote");
+        }
+        const data = await response.json();
+        setTags(data);
+      } catch (error) {
+        toast.error("Error in fetching tags!");
+      }
+    };
+    fetchTags();
+  }, []);
+
+  // FETCHING QUOTES ON CLICKING NEXT QUOTE BUTTON
   const handleClick = async () => {
     setLoading(true);
     try {
@@ -60,6 +74,8 @@ const Home = ({ addBookmarkAction }) => {
     }
     setLoading(false);
   };
+
+  // FETCHING QUOTES WHEN A SPECIFIC TAG IS PASSED AS QUERY
   const handleQueryClick = async () => {
     setLoading(true);
     try {
@@ -82,6 +98,7 @@ const Home = ({ addBookmarkAction }) => {
     setLoading(false);
   };
 
+  // ADDING BOOKMARK FUNCTION HANDLER
   const bookmarkHandler = () => {
     const newBookmark = {
       id: id,
@@ -94,24 +111,10 @@ const Home = ({ addBookmarkAction }) => {
     navigate("/bookmarks");
   };
 
+  // FUNCTION TO HANDLE TAG INPUT CHANGE
   const handleTagChange = (event) => {
     setSelectedTag(event.target.value);
   };
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await fetch("https://api.quotable.io/tags");
-        if (!response.ok) {
-          throw new Error("Failed to fetch quote");
-        }
-        const data = await response.json();
-        setTags(data);
-      } catch (error) {
-        toast.error("Error in fetching tags!");
-      }
-    };
-    fetchTags();
-  }, []);
 
   return (
     <div className="flex flex-col">
